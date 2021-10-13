@@ -7,10 +7,7 @@ from exif import Image as imk
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-Rwidth = 500
-Rheight = 400
-row = 0
-col = 0
+
 
 class App:
     def __init__(self) -> None:
