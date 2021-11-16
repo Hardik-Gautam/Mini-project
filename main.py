@@ -8,22 +8,24 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
-
 class App:
+    
     def __init__(self) -> None:
         self.root = Tk()
         self.root.geometry("700x420+500+200")
         self.root.title("Place Finder")
         self.index = []
         self.count = 0
-      
-        self.image_label = Label(self.root,text="Image must be click by phone.")
+        self.root.config(bg="#2E4053") 
+        self.image_label = Label(self.root,text="Image must be click by phone.",bg="#2E4053",fg="white") 
         self.image_label.place(x=250,y=170)
         
-        self.btn_lb = Label(self.root,bg='gray',width=500,height=30)
+        self.btn_lb = Label(self.root,bg='#212F3C',width=500,height=30)
         self.btn_lb.place(x=0,y=370)
-        self.select_btn = Button(self.root,cursor='hand2',text="Select Image",relief=GROOVE,command=self.file_reader)
+        self.select_btn = Button(self.root,cursor='hand2',text="Select Image",bg="#7D3C98",fg="white",activebackground="#7D3C98",relief=GROOVE,command=self.file_reader)
         self.select_btn.place(x=300,y=380)
+        
+        
 
     def file_reader(self):
         try:
@@ -43,20 +45,20 @@ class App:
 
             self.img = self.img.resize((260,250))
             self.img = ImageTk.PhotoImage(self.img)
-            self.sk=Frame(self.root,bg='black',width=700,height=30)
+            self.sk=Frame(self.root,bg='#2E4053',width=700,height=30)
             self.sk.place(x=0,y=0)
 
-            Label(self.sk,text="Image Details",bg='black',fg='white',font=("",10)).place(x=55,y=5)
-            Label(self.sk,text="Selected Image",bg='black',fg='white',font=("",10)).place(x=510,y=5)
+            Label(self.sk,text="Image Details",bg='#2E4053',fg='white',font=("",10)).place(x=55,y=5)
+            Label(self.sk,text="Selected Image",bg='#2E4053',fg='white',font=("",10)).place(x=510,y=5)
             
-            self.f1 = Frame(self.root,width=200,height=500)
+            self.f1 = Frame(self.root,width=200,height=500,bg="#2E4053") 
             self.f1.place(x=0,y=35)
-            self.f2 = Frame(self.root,width=200,height=500)
+            self.f2 = Frame(self.root,width=200,height=500,bg="#2E4053") 
             self.f2.place(x=215,y=35)
             self.image_label.config(image=self.img)
             self.image_label.place(x=430,y=35)
             
-            self.find_btn = Button(self.btn_lb,text=" Find ",cursor='hand2',relief=RAISED,command=lambda:[self.get_info(exifdata1)])
+            self.find_btn = Button(self.btn_lb,text=" Find ",bg="#FBFCFC",cursor='hand2',relief=RAISED,command=lambda:[self.get_info(exifdata1)])
             self.find_btn.place(x=630,y=10)
             
             for tag_id in exifdata:
@@ -65,10 +67,10 @@ class App:
                 if isinstance(data, bytes):
                     data = data.decode()
                 if self.count !=9:
-                    self.index.append(Label(self.f1,text=f"{tag:25}: {data}",fg='blue'))
+                    self.index.append(Label(self.f1,text=f"{tag:25}: {data}",fg='white',bg="#2E4053"))
                     self.index[self.count].pack(pady=2, side= TOP, anchor="w")
                 else:
-                    self.index.append(Label(self.f2,text=f"{tag:25}: {data}",fg='blue'))
+                    self.index.append(Label(self.f2,text=f"{tag:25}: {data}",fg='white',bg="#2E4053"))
                     self.index[self.count].pack(pady=2, side= TOP, anchor="w")
                 self.count+=1
             
@@ -77,19 +79,20 @@ class App:
             if img.has_exif:
                 try: 
                     img.gps_latitude,img.gps_latitude_ref,img.gps_longitude,img.gps_longitude_ref
-                    Label(self.root,text="avaliable").place(x=520,y=300)
+                    Label(self.root,text="avaliable",bg="#2E4053",fg="white").place(x=520,y=300)
                 except:
-                    Label(self.root,text="unavaliable").place(x=520,y=300)   
+                    Label(self.root,text="unavaliable",bg="#2E4053",fg="white").place(x=520,y=300)  
             self.count=0
             
     def get_info(self,exifdata):
         
         with open(exifdata, "rb") as src:
             img = imk(src)
+        print(img.has_exif)
         if img.has_exif:
             try: 
                 self.automate_brow(self.remove_sm([img.gps_latitude,img.gps_longitude],[img.gps_latitude_ref,img.gps_longitude_ref]))
-                Button(self.root,text="Exit Browser",cursor='hand2',command=self.driver.quit).place(x=10,y=380)
+                Button(self.root,text="Exit Browser",bg="red",fg="white",activebackground="red",cursor='hand2',command=self.driver.quit).place(x=10,y=380)
             except:
                   messagebox.showerror(title="Error",message="Location cannot find ?")    
         else:
@@ -109,16 +112,16 @@ class App:
         li[0] = li[0] + ref[0]
         li[1] = li[1] + ref[1]
         return li[0]+" "+li[1]
-
     def automate_brow(self,value):
-        self.driver = webdriver.Chrome("chromedriver.exe") # Enter whole Path of chromeWebDriver.exe
- 
+        self.value = value
+        self.driver = webdriver.Chrome(executable_path="chromedriver.exe")
         self.driver.maximize_window()
-        self.driver.get("https://www.google.com/maps/@20.9880135,82.7525294,5z")
+        self.driver.get("https://www.google.com/maps/@28.5999104,77.4144,12z")
 
-        self.driver.find_element(By.XPATH,"//*[@id='searchboxinput']").send_keys(value)
+        self.driver.find_element(By.XPATH,"//*[@id='searchboxinput']").send_keys(self.value)
         self.driver.find_element_by_id("searchbox-searchbutton").click()
 
+   
 
 app = App()
 app.root.mainloop()
