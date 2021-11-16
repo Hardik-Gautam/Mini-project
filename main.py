@@ -111,7 +111,7 @@ class App:
         return li[0]+" "+li[1]
 
     def automate_brow(self,value):
-        self.driver = webdriver.Chrome("chromedriver.exe")
+        self.driver = webdriver.Chrome("chromedriver.exe") # Enter whole Address of chromeWebDriver 
         self.driver.maximize_window()
         self.driver.get("https://www.google.com/maps/@20.9880135,82.7525294,5z")
 
